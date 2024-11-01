@@ -76,7 +76,7 @@
 
     .tile {
       background-color: #cdc1b4;
-      font-size: calc(2vw + 2vh);
+      font-size: calc(1vw + 2vh);
       color: #776e65;
       display: flex;
       align-items: center;
@@ -104,7 +104,7 @@
       align-items: center;
       justify-content: center;
       font-weight: bold; /* Texte en gras */
-      font-size: calc(4vw + 4vh); /* Augmentation de la taille de la police */
+      font-size: calc(2vw + 2vh); 
     }
 
     .tile.new {
@@ -139,6 +139,15 @@
     #controls button:hover {
       background-color: #a67c52;
     }
+
+    /* Style pour l'affichage du score */
+    #score-display {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 1.5em;
+      color: #776e65;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +161,8 @@
     <div id="game-container">
       <!-- La grille du jeu sera générée ici -->
     </div>
+    <!-- Affichage du score -->
+    <div id="score-display">Score: 0</div>
   </div>
 
   <!-- Boutons de contrôle -->
@@ -234,6 +245,17 @@
       }
     }
 
+    // Calculer la somme de toutes les tuiles
+    function calculateSumOfTiles() {
+      let sum = 0;
+      for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+          sum += grid[i][j];
+        }
+      }
+      return sum;
+    }
+
     // Mise à jour de l'affichage de la grille
     function updateGrid() {
       const gameContainer = document.getElementById('game-container');
@@ -256,6 +278,10 @@
           gameContainer.appendChild(tile);
         }
       }
+
+      // Mettre à jour l'affichage du score
+      const sumOfTiles = calculateSumOfTiles();
+      document.getElementById('score-display').textContent = 'Score: ' + sumOfTiles;
     }
 
     // Couleurs des tuiles
