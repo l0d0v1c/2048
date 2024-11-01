@@ -103,6 +103,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: bold; /* Texte en gras */
+      font-size: calc(4vw + 4vh); /* Augmentation de la taille de la police */
     }
 
     .tile.new {
@@ -155,6 +157,7 @@
   <!-- Boutons de contrôle -->
   <div id="controls" style="display: none;">
     <button id="undo-button">Annuler</button>
+    <button id="restart-button">Redémarrer</button>
     <button id="next-four-button">Prochaine tuile : 4</button>
   </div>
 
@@ -203,6 +206,15 @@
       } else {
         alert("Impossible d'annuler !");
       }
+    }
+
+    // Fonction pour redémarrer le jeu
+    function restartGame() {
+      saveState(); // Sauvegarder l'état actuel au cas où
+      createEmptyGrid();
+      addNewTile();
+      addNewTile();
+      updateGrid();
     }
 
     // Ajout d'une nouvelle tuile
@@ -358,6 +370,10 @@
       undo();
     });
 
+    document.getElementById('restart-button').addEventListener('click', function() {
+      restartGame();
+    });
+
     document.getElementById('next-four-button').addEventListener('click', function() {
       nextTileIsFour = true;
     });
@@ -453,31 +469,28 @@
 
     // Vérification de la fin du jeu
     function checkGameOver() {
+      if (!movesAvailable()) {
+        alert('Game Over! Revenir à la position précédente.');
+        undo(); // Revenir à l'état précédent
+      }
+    }
+
+    // Vérification des mouvements disponibles
+    function movesAvailable() {
       for (let i = 0; i < gridSize; i++) {
         for (let j = 0; j < gridSize; j++) {
           if (grid[i][j] === 0) {
-            return;
+            return true;
           }
           if (j !== gridSize - 1 && grid[i][j] === grid[i][j + 1]) {
-            return;
+            return true;
           }
           if (i !== gridSize - 1 && grid[i][j] === grid[i + 1][j]) {
-            return;
+            return true;
           }
         }
       }
-      alert('Game Over!');
-    }
-
-    // Vérification de la victoire
-    function checkWin() {
-      for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-          if (grid[i][j] === 2048) {
-            alert('Vous avez gagné !');
-          }
-        }
-      }
+      return false;
     }
 
     // Initialiser l'audio lors de la première interaction
